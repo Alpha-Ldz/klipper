@@ -109,7 +109,7 @@ ENV MOONRAKER_VENV_DIR=${HOME}/moonraker-env
 ENV WHEELS=/wheels
 ENV PYTHONUNBUFFERED=1
 
-ARG DEVICE_GROUP=device
+ARG DEVICE_GROUP=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
 ARG DEVICE_GID=987
 
 
