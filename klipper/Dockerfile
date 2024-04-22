@@ -29,7 +29,8 @@ RUN apt-get update && \
 	gpiod \
 	libopenjp2-7 \
 	liblmdb-dev \
-	libsodium-dev
+	libsodium-dev \
+    sudo
 
 RUN sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen
 RUN locale-gen
@@ -38,13 +39,13 @@ RUN python -m pip install -U pip wheel && \
 
 ENV LC_ALL en_GB.UTF-8 
 ENV LANG en_GB.UTF-8  
-ENV LANGUAGE en_GB:en   
-
-ENV MOONRAKER_DATA_PATH=/home/klippy/.moonraker_database
-ENV MOONRAKER_CONFIG_PATH=/home/klippy/.config
+ENV LANGUAGE en_GB:en
 
 USER ${USER}
 WORKDIR ${HOME}
+
+ENV MOONRAKER_DATA_PATH=/home/klippy/.moonraker_database
+ENV MOONRAKER_CONFIG_PATH=/home/klippy/.config
 
 ### Klipper setup ###
 RUN git clone --single-branch --branch ${KLIPPER_BRANCH} https://github.com/Klipper3d/klipper.git klipper
@@ -115,7 +116,6 @@ ENV PYTHONUNBUFFERED=1
 ARG DEVICE_GROUP=device
 ARG DEVICE_GID=987
 
-
 RUN useradd --user-group --no-log-init --shell /bin/false -m -d ${HOME} ${USER} && \
     groupadd -g ${DEVICE_GID} ${DEVICE_GROUP} && \
     usermod -a -G ${DEVICE_GROUP} ${USER} && \
@@ -151,6 +151,9 @@ COPY --chown=${USER}:${USER} --from=builder ${HOME}/moonraker ${HOME}/moonraker
 COPY --chown=${USER}:${USER} --from=builder ${MOONRAKER_VENV_DIR} ${MOONRAKER_VENV_DIR}
 COPY --chown=${USER}:${USER} config ${CONFIG_DIR}
 COPY --chown=${USER}:${USER} klipper/run_in_venv /usr/local/bin/run_in_venv
+
+COPY ./klipper/init.sh ${HOME}/init-copy-config.sh
+RUN chmod 777 ${HOME}/init-copy-config.sh
 
 COPY klipper/supervisord.conf /etc/supervisord/conf.d/supervisord.conf
 COPY klipper/*.ini /etc/supervisord/
