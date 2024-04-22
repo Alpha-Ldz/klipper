@@ -40,6 +40,9 @@ ENV LC_ALL en_GB.UTF-8
 ENV LANG en_GB.UTF-8  
 ENV LANGUAGE en_GB:en   
 
+ENV MOONRAKER_DATA_PATH=/home/klippy/.moonraker_database
+ENV MOONRAKER_CONFIG_PATH=/home/klippy/.config
+
 USER ${USER}
 WORKDIR ${HOME}
 
@@ -109,7 +112,7 @@ ENV MOONRAKER_VENV_DIR=${HOME}/moonraker-env
 ENV WHEELS=/wheels
 ENV PYTHONUNBUFFERED=1
 
-ARG DEVICE_GROUP=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
+ARG DEVICE_GROUP=device
 ARG DEVICE_GID=987
 
 
